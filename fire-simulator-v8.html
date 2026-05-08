@@ -1,0 +1,2405 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>复利人生 · The Compound Life</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Manrope:wght@200;300;400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;600;700;800&family=Noto+Serif+SC:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+  :root{
+    --bg:#FAFAF7;
+    --bg-card:#FFFFFF;
+    --bg-subtle:#F4F3EE;
+    --border:rgba(0,0,0,0.06);
+    --border-strong:rgba(0,0,0,0.12);
+    --shadow-sm:0 1px 3px rgba(0,0,0,0.04),0 1px 2px rgba(0,0,0,0.02);
+    --shadow-md:0 4px 16px rgba(0,0,0,0.04),0 2px 6px rgba(0,0,0,0.03);
+    --shadow-lg:0 12px 40px rgba(0,0,0,0.06),0 4px 12px rgba(0,0,0,0.04);
+    --text:#1A1A1A;
+    --text-secondary:#6B6B6B;
+    --text-tertiary:#9B9B9B;
+    --accent:#2A8F47;
+    --accent-soft:#E8F3EC;
+    --accent-line:#3BA75A;
+    --warn:#C44536;
+    --warn-soft:#FBEAE7;
+    --gray-line:rgba(0,0,0,0.18);
+    --serif:'Noto Serif SC','Songti SC',serif;
+    --sans:'Inter','Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif;
+    --num:'Manrope','Inter',sans-serif;
+  }
+  html,body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:400;letter-spacing:-0.005em}
+  body{min-height:100vh;overflow-x:hidden}
+  
+  body::before{
+    content:'';position:fixed;top:-20%;left:-10%;width:50%;height:60%;
+    background:radial-gradient(ellipse,rgba(42,143,71,0.05) 0%,transparent 60%);
+    pointer-events:none;z-index:0;
+  }
+  
+  .container{max-width:880px;margin:0 auto;padding:0 24px;position:relative;z-index:1}
+  
+  /* ========== Hero ========== */
+  .hero{padding:100px 0 60px;text-align:center}
+  .hero .eyebrow{
+    font-size:11px;letter-spacing:0.32em;text-transform:uppercase;
+    color:var(--text-tertiary);margin-bottom:32px;font-weight:600;
+  }
+  .hero h1{
+    font-family:var(--serif);font-weight:300;
+    font-size:clamp(40px,6vw,68px);line-height:1.2;letter-spacing:-0.02em;
+    margin-bottom:24px;color:var(--text);
+  }
+  .hero h1 .accent{color:var(--accent);font-weight:600}
+  .hero p{
+    font-size:17px;line-height:1.6;color:var(--text-secondary);
+    max-width:520px;margin:0 auto;font-weight:400;
+  }
+  
+  /* ========== Section ========== */
+  section{padding:48px 0}
+  .section-num{
+    font-family:var(--num);font-size:13px;color:var(--text-tertiary);
+    letter-spacing:0.24em;font-weight:500;margin-bottom:12px;
+  }
+  .section-num::before{content:'— ';margin-right:4px}
+  .section-title{
+    font-family:var(--serif);font-weight:300;
+    font-size:clamp(28px,3.5vw,38px);line-height:1.3;letter-spacing:-0.015em;
+    margin-bottom:36px;color:var(--text);
+  }
+  .section-title .accent{color:var(--accent);font-weight:600}
+  
+  /* ========== 输入区 (年龄 / 年薪) ========== */
+  .input-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .input-grid-3{grid-template-columns:1fr 1fr 1fr}
+  .input-block{
+    background:var(--bg-card);border:1px solid var(--border);
+    border-radius:18px;padding:24px;
+    box-shadow:var(--shadow-sm);
+    transition:all 0.3s cubic-bezier(0.16,1,0.3,1);
+  }
+  .input-block:hover{box-shadow:var(--shadow-md);border-color:var(--border-strong)}
+  .input-label{
+    font-size:11px;color:var(--text-tertiary);
+    letter-spacing:0.16em;text-transform:uppercase;margin-bottom:14px;font-weight:600;
+  }
+  .input-row{display:flex;align-items:baseline;gap:8px}
+  .input-field{
+    background:transparent;border:none;outline:none;color:var(--text);
+    font-family:var(--num);font-size:42px;font-weight:300;letter-spacing:-0.02em;
+    width:100%;padding:0;
+  }
+  .input-field::-webkit-inner-spin-button,.input-field::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+  .input-suffix{
+    font-size:14px;color:var(--text-tertiary);font-weight:400;
+  }
+  .input-hint{
+    font-size:11px;color:var(--text-tertiary);margin-top:8px;
+    line-height:1.4;font-weight:400;
+  }
+  
+  /* ========== 剧本卡片 ========== */
+  .scenarios{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px}
+  .scenario{
+    background:var(--bg-card);border:1.5px solid var(--border);
+    border-radius:18px;padding:24px 20px;cursor:pointer;
+    transition:all 0.3s cubic-bezier(0.16,1,0.3,1);
+    box-shadow:var(--shadow-sm);
+  }
+  .scenario:hover{box-shadow:var(--shadow-md);transform:translateY(-2px)}
+  .scenario.active{
+    border-color:var(--accent);background:var(--accent-soft);
+    box-shadow:0 6px 20px rgba(42,143,71,0.12);
+  }
+  .scenario-emoji{font-size:28px;margin-bottom:12px;display:block}
+  .scenario-name{font-size:16px;font-weight:600;margin-bottom:6px;letter-spacing:-0.005em}
+  .scenario-desc{font-size:12px;color:var(--text-secondary);line-height:1.5;font-weight:400}
+  
+  /* ========== 剧本参数详情 ========== */
+  .scenario-params{
+    background:var(--bg-card);border:1px solid var(--border);
+    border-radius:18px;padding:28px;box-shadow:var(--shadow-sm);
+  }
+  .scenario-params-header{
+    font-size:13px;color:var(--text-secondary);
+    margin-bottom:20px;line-height:1.5;
+  }
+  .scenario-params-header .scenario-tag{
+    display:inline-block;padding:3px 10px;background:var(--accent-soft);
+    color:var(--accent);border-radius:6px;font-weight:600;
+    font-size:12px;margin:0 4px;
+  }
+  .params-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px}
+  .param-input{
+    background:var(--bg-subtle);border:1px solid transparent;border-radius:12px;
+    padding:14px 16px;transition:all 0.2s ease;
+  }
+  .param-input:focus-within{background:var(--bg-card);border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  .param-label{font-size:10px;color:var(--text-tertiary);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:6px;font-weight:600}
+  .param-row{display:flex;align-items:baseline;gap:4px}
+  .param-field{
+    background:transparent;border:none;outline:none;color:var(--text);
+    font-family:var(--num);font-size:22px;font-weight:400;letter-spacing:-0.01em;
+    width:100%;padding:0;
+  }
+  .param-field::-webkit-inner-spin-button,.param-field::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+  .param-suffix{font-size:11px;color:var(--text-tertiary);font-weight:400;white-space:nowrap}
+  
+  /* ========== 滑块 ========== */
+  .slider-block{
+    background:var(--bg-card);border:1px solid var(--border);
+    border-radius:18px;padding:28px;box-shadow:var(--shadow-sm);
+  }
+  .slider-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:20px;flex-wrap:wrap;gap:8px}
+  .slider-title{font-size:11px;color:var(--text-tertiary);letter-spacing:0.16em;text-transform:uppercase;font-weight:600}
+  .slider-value{font-family:var(--num);font-size:28px;font-weight:300;letter-spacing:-0.01em}
+  .slider-value .unit{font-size:13px;color:var(--text-tertiary);margin-left:6px;font-weight:400}
+  
+  input[type="range"]{
+    -webkit-appearance:none;appearance:none;width:100%;height:4px;
+    background:rgba(0,0,0,0.08);border-radius:2px;outline:none;
+  }
+  input[type="range"]::-webkit-slider-thumb{
+    -webkit-appearance:none;appearance:none;width:22px;height:22px;
+    background:var(--bg-card);border:1.5px solid var(--accent);
+    border-radius:50%;cursor:pointer;
+    transition:transform 0.2s ease;
+    box-shadow:var(--shadow-md);
+  }
+  input[type="range"]::-webkit-slider-thumb:hover{transform:scale(1.15)}
+  input[type="range"]::-moz-range-thumb{
+    width:22px;height:22px;background:var(--bg-card);border:1.5px solid var(--accent);
+    border-radius:50%;cursor:pointer;box-shadow:var(--shadow-md);
+  }
+  
+  .slider-labels{
+    display:flex;justify-content:space-between;margin-top:14px;
+    font-size:11px;color:var(--text-tertiary);letter-spacing:0.04em;
+  }
+  .slider-labels strong{color:var(--text-secondary);font-weight:500}
+  
+  /* ========== 收益率分档 ========== */
+  .return-options{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+  .return-option{
+    background:var(--bg-card);border:1.5px solid var(--border);
+    border-radius:14px;padding:18px 12px;cursor:pointer;text-align:center;
+    transition:all 0.3s cubic-bezier(0.16,1,0.3,1);box-shadow:var(--shadow-sm);
+  }
+  .return-option:hover{box-shadow:var(--shadow-md);transform:translateY(-2px)}
+  .return-option.active{border-color:var(--accent);background:var(--accent-soft);box-shadow:0 6px 20px rgba(42,143,71,0.12)}
+  .return-pct{font-family:var(--num);font-size:24px;font-weight:300;margin-bottom:4px;letter-spacing:-0.02em}
+  .return-label{font-size:10px;color:var(--text-tertiary);letter-spacing:0.04em;line-height:1.3}
+  
+  /* 自定义收益率输入 */
+  .return-custom{
+    margin-top:14px;background:var(--bg-card);border:1px solid var(--border);
+    border-radius:14px;padding:18px 24px;
+    display:none;align-items:center;justify-content:space-between;gap:16px;
+  }
+  .return-custom.show{display:flex}
+  .return-custom-label{font-size:13px;color:var(--text-secondary)}
+  .return-custom-input{display:flex;align-items:baseline;gap:4px}
+  .return-custom-input input{
+    background:transparent;border:none;outline:none;
+    font-family:var(--num);font-size:28px;font-weight:300;
+    width:80px;text-align:right;color:var(--text);
+    border-bottom:1.5px solid var(--accent);padding:0 4px 4px;
+  }
+  .return-custom-input input::-webkit-inner-spin-button,.return-custom-input input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+  
+  /* 教育提示 */
+  .return-note{
+    margin-top:16px;padding:14px 18px;background:var(--bg-subtle);
+    border-radius:12px;font-size:12px;color:var(--text-secondary);line-height:1.6;
+  }
+  .return-note strong{color:var(--text);font-weight:600}
+  
+  /* ========== Verdict 结果 ========== */
+  .verdict{
+    padding:80px 0 60px;text-align:center;
+    border-top:1px solid var(--border);margin-top:48px;
+  }
+  .verdict-eyebrow{
+    font-size:11px;letter-spacing:0.32em;text-transform:uppercase;
+    color:var(--text-tertiary);margin-bottom:28px;font-weight:600;
+  }
+  .verdict-number{
+    font-family:var(--num);font-size:clamp(72px,12vw,140px);
+    font-weight:200;line-height:1;letter-spacing:-0.04em;
+    color:var(--accent);margin-bottom:24px;
+  }
+  .verdict-number .currency{font-size:0.4em;color:var(--text-tertiary);margin-right:0.1em;vertical-align:0.5em;font-weight:300}
+  .verdict-number .unit{font-size:0.3em;color:var(--text-secondary);margin-left:0.15em;font-weight:300;letter-spacing:0}
+  .verdict-caption{
+    font-family:var(--serif);font-weight:400;
+    font-size:clamp(18px,2.2vw,24px);color:var(--text-secondary);
+    max-width:580px;margin:0 auto;line-height:1.55;letter-spacing:-0.01em;
+  }
+  .verdict-caption .highlight{color:var(--text);font-weight:500}
+  
+  /* ========== 视图切换 ========== */
+  .view-toggle{
+    display:inline-flex;background:var(--bg-subtle);border-radius:12px;
+    padding:4px;margin-bottom:24px;
+  }
+  .view-toggle-btn{
+    background:transparent;border:none;padding:10px 20px;
+    font-size:13px;font-weight:500;color:var(--text-secondary);
+    border-radius:8px;cursor:pointer;font-family:var(--sans);
+    transition:all 0.2s ease;letter-spacing:-0.005em;
+  }
+  .view-toggle-btn.active{background:var(--bg-card);color:var(--text);box-shadow:var(--shadow-sm)}
+  
+  /* ========== 图表 ========== */
+  .chart-wrap{
+    background:var(--bg-card);border:1px solid var(--border);
+    border-radius:24px;padding:36px;box-shadow:var(--shadow-md);
+    margin-bottom:20px;
+  }
+  .chart-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:32px;flex-wrap:wrap;gap:16px}
+  .chart-title{font-family:var(--serif);font-weight:400;font-size:22px;letter-spacing:-0.015em;line-height:1.4;color:var(--text)}
+  .chart-legend{display:flex;gap:20px;flex-wrap:wrap}
+  .legend-item{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-secondary)}
+  .legend-dot{width:10px;height:10px;border-radius:50%}
+  .legend-dot.green{background:var(--accent)}
+  .legend-dot.gray{background:var(--gray-line)}
+  .chart-container{position:relative;height:420px}
+  
+  /* ========== 表格视图 ========== */
+  .table-wrap{
+    background:var(--bg-card);border:1px solid var(--border);
+    border-radius:24px;padding:32px;box-shadow:var(--shadow-md);
+    overflow:hidden;
+  }
+  .table-hint{
+    font-size:12px;color:var(--text-tertiary);
+    margin-bottom:16px;padding:10px 14px;background:var(--bg-subtle);
+    border-radius:10px;display:inline-block;
+  }
+  .table-hint::before{content:'✏️  ';font-size:11px}
+  .table-scroll{overflow:auto;max-height:520px;border-radius:12px}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{
+    font-family:var(--sans);font-weight:600;font-size:11px;
+    letter-spacing:0.08em;text-transform:uppercase;color:var(--text-tertiary);
+    padding:14px 12px;text-align:right;background:var(--bg-subtle);
+    position:sticky;top:0;z-index:1;
+  }
+  th:first-child{text-align:left}
+  td{
+    padding:11px 12px;text-align:right;font-family:var(--num);font-weight:400;
+    border-bottom:1px solid var(--border);color:var(--text);
+  }
+  td:first-child{text-align:left;color:var(--text-secondary);font-weight:500}
+  tr:hover td{background:rgba(42,143,71,0.02)}
+  tr.cliff-row td{background:rgba(196,69,54,0.04);color:var(--warn)}
+  tr.fire-row td{background:rgba(42,143,71,0.06);font-weight:500}
+  tr.fire-row td:first-child::before{content:'🎯  ';font-size:11px}
+  tr.cliff-row td:first-child::before{content:'⚠️  ';font-size:11px}
+  
+  .editable-cell{
+    cursor:pointer;border-radius:6px;padding:4px 8px;display:inline-block;
+    transition:all 0.15s ease;border:1px solid transparent;min-width:60px;
+  }
+  .editable-cell:hover{background:var(--accent-soft);border-color:var(--accent-line)}
+  .cell-input{
+    background:var(--bg-card);border:1.5px solid var(--accent);
+    border-radius:6px;padding:3px 8px;font-family:var(--num);font-size:13px;
+    width:80px;text-align:right;outline:none;
+  }
+  .cell-input::-webkit-inner-spin-button,.cell-input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+  
+  td.col-compound{color:var(--accent);font-weight:500}
+  td.col-passive{color:var(--accent)}
+  
+  /* ========== 里程碑 ========== */
+  .milestones{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:20px;
+  }
+  .milestone{
+    background:var(--bg-card);border:1px solid var(--border);
+    border-radius:18px;padding:24px;box-shadow:var(--shadow-sm);
+  }
+  .milestone-label{
+    font-size:10px;color:var(--text-tertiary);letter-spacing:0.16em;
+    text-transform:uppercase;margin-bottom:14px;font-weight:600;
+  }
+  .milestone-value{font-family:var(--num);font-size:32px;font-weight:300;letter-spacing:-0.02em;margin-bottom:8px;color:var(--accent)}
+  .milestone-value.warn{color:var(--warn)}
+  .milestone-desc{font-size:12px;color:var(--text-secondary);line-height:1.55;font-weight:400}
+  
+  /* ========== 时间轴 ========== */
+  .timeline-control{
+    background:var(--bg-card);border:1px solid var(--border);
+    border-radius:24px;padding:36px;margin-bottom:24px;box-shadow:var(--shadow-md);
+  }
+  .age-display{text-align:center;margin-bottom:28px}
+  .age-eyebrow{font-size:11px;letter-spacing:0.32em;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:12px;font-weight:600}
+  .age-number{font-family:var(--num);font-size:80px;font-weight:200;letter-spacing:-0.04em;line-height:1}
+  .age-year{font-size:13px;color:var(--text-tertiary);margin-top:6px;font-family:var(--num)}
+  
+  .story-card{
+    background:var(--bg-card);border:1px solid var(--border);
+    border-radius:24px;padding:36px;box-shadow:var(--shadow-md);
+  }
+  .story-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-bottom:28px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+  .story-stat-label{font-size:10px;color:var(--text-tertiary);letter-spacing:0.16em;text-transform:uppercase;margin-bottom:10px;font-weight:600}
+  .story-stat-value{font-family:var(--num);font-size:26px;font-weight:300;letter-spacing:-0.02em}
+  .story-stat-value.accent{color:var(--accent)}
+  .story-narrative{
+    font-family:var(--serif);font-weight:400;font-size:18px;line-height:1.7;
+    color:var(--text-secondary);letter-spacing:-0.01em;
+  }
+  .story-narrative .highlight{color:var(--text);font-weight:500}
+  .story-narrative .accent{color:var(--accent);font-weight:500}
+  
+  /* ========== 哲学结语 ========== */
+  .philosophy{padding:120px 0 60px;text-align:center;border-top:1px solid var(--border);margin-top:80px}
+  .philosophy-quote{
+    font-family:var(--serif);font-weight:400;
+    font-size:clamp(22px,3vw,34px);line-height:1.5;letter-spacing:-0.015em;
+    max-width:680px;margin:0 auto 28px;color:var(--text);
+  }
+  .philosophy-quote .accent{color:var(--accent);font-weight:600}
+  .philosophy-author{font-size:11px;color:var(--text-tertiary);letter-spacing:0.32em;text-transform:uppercase;font-weight:600}
+  
+  footer{padding:40px 0;text-align:center;color:var(--text-tertiary);font-size:11px;letter-spacing:0.04em;line-height:1.6}
+  
+  /* 响应式 */
+  @media(max-width:768px){
+    .container{padding:0 20px}
+    .hero{padding:64px 0 32px}
+    .input-grid,.input-grid-3{grid-template-columns:1fr}
+    .scenarios{grid-template-columns:1fr;gap:10px}
+    .return-options{grid-template-columns:repeat(2,1fr)}
+    .milestones{grid-template-columns:1fr}
+    .story-stats{grid-template-columns:1fr;gap:16px}
+    .chart-wrap,.table-wrap{padding:20px}
+    .chart-container{height:340px}
+    .input-field{font-size:32px}
+    .age-number{font-size:64px}
+    section{padding:32px 0}
+  }
+  
+  /* 进入动画 */
+  .fade-in{opacity:0;transform:translateY(16px);animation:fadeIn 0.7s cubic-bezier(0.16,1,0.3,1) forwards}
+  @keyframes fadeIn{to{opacity:1;transform:translateY(0)}}
+  .delay-1{animation-delay:0.08s}
+  .delay-2{animation-delay:0.16s}
+  
+  /* 折叠的高级选项 */
+  .advanced-toggle{
+    margin-top:24px;padding:14px 18px;background:var(--bg-subtle);
+    border-radius:12px;cursor:pointer;display:flex;align-items:center;
+    justify-content:space-between;font-size:13px;color:var(--text-secondary);
+    transition:all 0.25s ease;font-weight:500;letter-spacing:-0.005em;
+    border:1px dashed transparent;
+  }
+  .advanced-toggle:hover{background:var(--accent-soft);color:var(--accent)}
+  .advanced-toggle .toggle-arrow{
+    font-family:var(--num);font-size:16px;
+    transition:transform 0.3s cubic-bezier(0.16,1,0.3,1);
+  }
+  .advanced-toggle.expanded{
+    background:var(--accent-soft);color:var(--accent);
+    border-bottom-left-radius:0;border-bottom-right-radius:0;
+  }
+  .advanced-toggle.expanded .toggle-arrow{transform:rotate(90deg)}
+  .advanced-panel{
+    max-height:0;overflow:hidden;
+    transition:max-height 0.4s cubic-bezier(0.16,1,0.3,1);
+    background:var(--bg-card);border:1px solid var(--border);
+    border-top:none;border-radius:0 0 12px 12px;
+  }
+  .advanced-panel.expanded{max-height:600px;padding:24px}
+  .advanced-hint{
+    font-size:12px;color:var(--text-secondary);line-height:1.6;
+    padding-bottom:18px;margin-bottom:18px;border-bottom:1px solid var(--border);
+  }
+  .advanced-hint strong{color:var(--text);font-weight:600}
+  
+  /* 表格里被覆盖的单元格标记 */
+  .editable-cell.overridden{
+    background:rgba(42,143,71,0.1);color:var(--accent);font-weight:600;
+    border-color:var(--accent-line);
+  }
+  .editable-cell.overridden::after{
+    content:'•';margin-left:4px;color:var(--accent);
+  }
+  
+  /* 重置覆盖的按钮 */
+  .reset-overrides{
+    background:transparent;border:1px solid var(--border-strong);
+    border-radius:8px;padding:6px 14px;font-size:12px;cursor:pointer;
+    color:var(--text-secondary);font-family:var(--sans);font-weight:500;
+    transition:all 0.2s ease;
+    display:none;
+  }
+  .reset-overrides:hover{background:var(--bg-subtle);color:var(--text)}
+  .reset-overrides.show{display:inline-block}
+  
+  /* 对比视图里的自定义曲线输入 */
+  .compare-add-mine{
+    margin-top:24px;padding:18px 20px;
+    background:var(--bg-subtle);border-radius:14px;
+    display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  }
+  .compare-add-label{font-size:13px;color:var(--text-secondary);font-weight:500}
+  .compare-add-input{display:flex;align-items:center;gap:8px}
+  .compare-add-input input{
+    background:var(--bg-card);border:1px solid var(--border-strong);border-radius:8px;
+    padding:8px 12px;width:80px;text-align:right;font-family:var(--num);
+    font-size:15px;font-weight:500;color:var(--text);outline:none;
+    transition:border-color 0.2s ease;
+  }
+  .compare-add-input input::-webkit-inner-spin-button,.compare-add-input input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+  .compare-add-input input:focus{border-color:var(--accent)}
+  .compare-add-input span{font-size:13px;color:var(--text-secondary)}
+  .compare-add-input button{
+    background:var(--accent);color:#fff;border:none;
+    padding:8px 14px;border-radius:8px;font-size:12px;font-weight:600;
+    cursor:pointer;font-family:var(--sans);transition:all 0.2s ease;
+  }
+  .compare-add-input button:hover{filter:brightness(0.95)}
+  .compare-add-input button#compareCustomClear{
+    background:transparent;color:var(--text-secondary);
+    border:1px solid var(--border-strong);
+  }
+  .compare-add-input button#compareCustomClear:hover{background:var(--bg-card);color:var(--text)}
+  
+  /* 对比图图例里"你"的高亮 */
+  .legend-item-user strong{color:var(--accent)}
+  
+  /* 视图过渡 (重要 - 控制04/05幕切换) */
+  .view-pane{display:none}
+  .view-pane.active{display:block;animation:fadeIn 0.4s ease forwards}
+  
+  /* ========== 分享 CTA ========== */
+  .share-cta{
+    background:var(--bg-card);border:1px solid var(--border);
+    border-radius:24px;padding:32px;box-shadow:var(--shadow-md);
+    display:flex;align-items:center;justify-content:space-between;gap:24px;
+    flex-wrap:wrap;
+  }
+  .share-cta-title{
+    font-family:var(--serif);font-size:22px;font-weight:500;
+    color:var(--text);margin-bottom:8px;letter-spacing:-0.01em;
+  }
+  .share-cta-desc{font-size:13px;color:var(--text-secondary);line-height:1.5}
+  .share-btn{
+    background:var(--accent);color:#fff;border:none;
+    padding:16px 28px;border-radius:14px;font-size:14px;font-weight:600;
+    font-family:var(--sans);cursor:pointer;letter-spacing:0.02em;
+    display:flex;align-items:center;gap:10px;
+    box-shadow:0 4px 14px rgba(42,143,71,0.25);
+    transition:all 0.25s cubic-bezier(0.16,1,0.3,1);
+  }
+  .share-btn:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(42,143,71,0.35)}
+  .share-btn:active{transform:translateY(0)}
+  .share-btn-arrow{font-family:var(--num);font-size:18px;transition:transform 0.2s ease}
+  .share-btn:hover .share-btn-arrow{transform:translateX(4px)}
+  
+  /* ========== 分享模态层 ========== */
+  .share-modal{
+    position:fixed;inset:0;z-index:1000;display:none;
+    align-items:center;justify-content:center;padding:24px;
+  }
+  .share-modal.show{display:flex}
+  .share-modal-bg{
+    position:absolute;inset:0;background:rgba(0,0,0,0.6);
+    backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  }
+  .share-modal-content{
+    position:relative;background:var(--bg);border-radius:24px;
+    padding:24px;max-width:420px;width:100%;
+    max-height:90vh;display:flex;flex-direction:column;
+    box-shadow:0 20px 60px rgba(0,0,0,0.3);
+    animation:fadeIn 0.3s ease forwards;
+  }
+  .share-modal-close{
+    position:absolute;top:16px;right:16px;
+    background:rgba(0,0,0,0.05);border:none;
+    width:32px;height:32px;border-radius:50%;
+    font-size:18px;cursor:pointer;color:var(--text-secondary);
+    display:flex;align-items:center;justify-content:center;
+    transition:all 0.2s ease;z-index:1;
+  }
+  .share-modal-close:hover{background:rgba(0,0,0,0.1);color:var(--text)}
+  .share-modal-title{
+    font-family:var(--serif);font-size:16px;font-weight:500;
+    color:var(--text);text-align:center;margin-bottom:12px;
+  }
+  .share-modal-toggle{
+    display:flex;background:var(--bg-subtle);border-radius:10px;
+    padding:3px;margin-bottom:14px;gap:2px;
+  }
+  .share-modal-toggle-btn{
+    flex:1;background:transparent;border:none;
+    padding:8px 12px;font-size:12px;font-weight:500;
+    color:var(--text-secondary);border-radius:8px;cursor:pointer;
+    font-family:var(--sans);transition:all 0.2s ease;
+  }
+  .share-modal-toggle-btn.active{
+    background:var(--bg-card);color:var(--text);
+    box-shadow:var(--shadow-sm);
+  }
+  .share-canvas-wrap{
+    position:relative;background:var(--bg-subtle);border-radius:16px;
+    overflow:hidden;flex:1;min-height:0;display:flex;align-items:center;justify-content:center;
+    margin-bottom:16px;
+  }
+  .share-canvas-wrap img{
+    width:100%;height:auto;display:block;border-radius:12px;
+  }
+  .share-loading{
+    position:absolute;inset:0;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:12px;
+    background:var(--bg-subtle);font-size:13px;color:var(--text-secondary);
+  }
+  .share-loading-spinner{
+    width:24px;height:24px;border:2px solid var(--border-strong);
+    border-top-color:var(--accent);border-radius:50%;
+    animation:spin 0.8s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
+  
+  .share-actions{display:flex;gap:8px}
+  .share-action-btn{
+    flex:1;padding:12px;border-radius:12px;border:1px solid var(--accent);
+    background:var(--accent);color:#fff;font-size:13px;font-weight:600;
+    font-family:var(--sans);cursor:pointer;transition:all 0.2s ease;
+  }
+  .share-action-btn:hover{filter:brightness(0.95)}
+  .share-action-btn.secondary{
+    background:transparent;color:var(--text-secondary);border-color:var(--border-strong);
+  }
+  .share-action-btn.secondary:hover{background:var(--bg-subtle);color:var(--text)}
+  
+  /* ========== 分享卡片 - 统一白底设计 (1080x1920 9:16) ========== */
+  .share-card{
+    width:1080px;height:1920px;
+    background:#FFFFFF;
+    padding:72px 64px 56px;
+    font-family:var(--sans);color:#1A1A1A;
+    display:flex;flex-direction:column;
+    box-sizing:border-box;
+    position:relative;
+    overflow:hidden;
+  }
+  .share-card::before{
+    content:'';position:absolute;top:0;left:0;right:0;height:6px;
+    background:linear-gradient(90deg,#2A8F47 0%,#5BA47C 50%,#D4AF5A 100%);
+  }
+  
+  /* 头部 */
+  .sc-header{margin-bottom:24px}
+  .sc-eyebrow{
+    font-size:18px;letter-spacing:0.32em;text-transform:uppercase;
+    color:#9B9B8E;margin-bottom:16px;font-weight:600;
+  }
+  .sc-title{
+    font-family:var(--serif);font-weight:300;
+    font-size:68px;line-height:1.1;letter-spacing:-0.02em;color:#1A1A1A;
+  }
+  .sc-title .emphasis{color:#2A8F47;font-weight:500}
+  
+  /* 结论卡片 (合并版) */
+  .sc-conclusion{
+    background:linear-gradient(135deg,#F4FBF6 0%,#FFF9EB 100%);
+    border:1px solid rgba(42,143,71,0.18);
+    border-radius:18px;padding:20px 28px;margin-bottom:24px;
+    display:flex;align-items:center;gap:18px;
+  }
+  .sc-conclusion-icon{
+    flex-shrink:0;width:52px;height:52px;border-radius:14px;
+    background:rgba(42,143,71,0.12);
+    display:flex;align-items:center;justify-content:center;
+    font-size:26px;
+  }
+  .sc-conclusion-text{
+    flex:1;font-size:21px;line-height:1.5;font-weight:400;color:#1A1A1A;
+  }
+  .sc-conclusion-text strong{color:#2A8F47;font-weight:700}
+  
+  /* 三个核心数字 */
+  .sc-stats{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-bottom:24px;
+    background:#FAFAF7;border-radius:18px;padding:22px 0;
+    border:1px solid rgba(0,0,0,0.06);
+  }
+  .sc-stat{
+    text-align:center;padding:0 20px;
+    border-right:1px solid rgba(0,0,0,0.08);
+  }
+  .sc-stat:last-child{border-right:none}
+  .sc-stat-label{
+    font-size:17px;color:#9B9B8E;font-weight:500;
+    letter-spacing:0.04em;margin-bottom:12px;
+  }
+  .sc-stat-value{
+    font-family:var(--num);font-size:44px;font-weight:500;
+    letter-spacing:-0.02em;color:#2A8F47;line-height:1;
+  }
+  
+  /* 主内容区 - 曲线或表格 */
+  .sc-main{
+    background:#FFFFFF;
+    border:1px solid rgba(0,0,0,0.08);
+    border-radius:18px;padding:24px;
+    margin-bottom:auto;
+    overflow:hidden;
+  }
+  .sc-main-chart canvas{width:100%!important;height:auto!important;display:block}
+  
+  .sc-chart-legend{
+    display:flex;justify-content:center;gap:36px;
+    margin-top:16px;padding-top:16px;
+    border-top:1px solid rgba(0,0,0,0.06);
+    font-size:20px;color:#5A5A4F;
+  }
+  .sc-chart-legend > div{display:flex;align-items:center;gap:10px}
+  .sc-chart-legend .legend-dot{width:14px;height:14px;border-radius:50%}
+  .sc-chart-legend .legend-dot.green{background:#2A8F47}
+  .sc-chart-legend .legend-dot.gray{background:rgba(0,0,0,0.45)}
+  .sc-chart-legend .legend-dot.stage-yellow{background:rgba(212,175,90,0.55);border-radius:3px}
+  .sc-chart-legend .legend-dot.stage-green{background:rgba(42,143,71,0.55);border-radius:3px}
+  
+  /* 表格样式 (在白底主内容区里) */
+  .sc-table{
+    width:100%;border-collapse:collapse;font-family:var(--sans);
+  }
+  .sc-table th{
+    font-size:14px;font-weight:600;color:#9B9B8E;
+    letter-spacing:0.04em;padding:10px 12px;text-align:left;
+    border-bottom:2px solid #1A1A1A;
+  }
+  .sc-table th.num{text-align:right}
+  .sc-table td{
+    font-family:var(--num);font-size:17px;font-weight:400;
+    padding:5px 12px;text-align:right;color:#1A1A1A;
+    border-bottom:1px solid rgba(0,0,0,0.06);
+    line-height:1.3;
+  }
+  .sc-table td:first-child{
+    text-align:left;color:#5A5A4F;font-weight:500;font-size:15px;
+  }
+  .sc-table tr:last-child td{border-bottom:none}
+  .sc-table tr.fire-row td{
+    background:rgba(42,143,71,0.07);font-weight:600;
+  }
+  .sc-table tr.fire-row td:first-child::before{
+    content:'★ ';color:#2A8F47;font-size:14px;
+  }
+  .sc-table tr.cliff-row td{color:#A85530}
+  .sc-table tr.cliff-row td:first-child::before{
+    content:'⚠ ';color:#A85530;font-size:13px;
+  }
+  .sc-table .col-compound{color:#2A8F47;font-weight:600}
+  .sc-table .col-passive{color:#5BA47C}
+  
+  /* 底部 */
+  .sc-footer{
+    display:flex;align-items:center;justify-content:space-between;
+    padding-top:20px;margin-top:24px;
+    border-top:1px solid rgba(0,0,0,0.08);gap:20px;
+  }
+  .sc-footer-quote{
+    font-family:var(--serif);font-size:18px;color:#5A5A4F;
+    font-weight:400;line-height:1.5;flex:1;
+  }
+  .sc-footer-brand{
+    display:flex;align-items:center;gap:14px;
+  }
+  .sc-qr{
+    width:84px;height:84px;
+    background:#F4F2EC;border:1px dashed rgba(0,0,0,0.18);
+    border-radius:10px;
+    display:flex;align-items:center;justify-content:center;
+    color:#9B9B8E;font-size:13px;font-weight:500;
+    font-family:var(--sans);
+  }
+  .sc-qr::before{content:'二维码'}
+  .sc-brand-text{text-align:right}
+  .sc-brand-name{
+    font-family:var(--serif);font-size:22px;font-weight:600;
+    color:#1A1A1A;margin-bottom:3px;
+  }
+  .sc-brand-tag{font-size:13px;color:#9B9B8E;font-weight:500}
+  
+  
+  /* 时间轴刻度容器 */
+  .timeline-with-marker{position:relative;padding-top:20px;padding-bottom:8px}
+  .timeline-markers{position:absolute;top:0;left:11px;right:11px;height:24px;pointer-events:none}
+  .timeline-marker{
+    position:absolute;transform:translateX(-50%);
+    pointer-events:auto;cursor:pointer;
+    display:flex;flex-direction:column;align-items:center;
+  }
+  .timeline-marker-dot{
+    width:8px;height:8px;border-radius:50%;background:var(--accent);
+    box-shadow:0 0 0 3px var(--bg),0 0 0 4px var(--accent);
+    margin-bottom:4px;transition:transform 0.2s ease;
+  }
+  .timeline-marker:hover .timeline-marker-dot{transform:scale(1.3)}
+  .timeline-marker-label{
+    position:absolute;top:-22px;white-space:nowrap;
+    font-size:10px;color:var(--accent);font-weight:600;
+    letter-spacing:0.04em;background:var(--bg);padding:2px 6px;
+    border-radius:4px;
+  }
+  .timeline-marker-label::before{content:'★ '}
+</style>
+</head>
+<body>
+
+<!-- ========== Hero ========== -->
+<section class="hero">
+  <div class="container">
+    <div class="eyebrow fade-in">THE COMPOUND LIFE</div>
+    <h1 class="fade-in delay-1">让钱替你工作的<br>那<span class="accent">一年</span>，你几岁</h1>
+    <p class="fade-in delay-2">
+      这不是一个理财计算器。<br>这是一面镜子，照出"有没有让复利替你工作"30 年后的两种人生。
+    </p>
+  </div>
+</section>
+
+<!-- ========== 第一幕 起点 ========== -->
+<section>
+  <div class="container">
+    <div class="section-num">01 起点</div>
+    <h2 class="section-title">告诉我你的 <span class="accent">现在</span></h2>
+    
+    <div class="input-grid input-grid-3">
+      <div class="input-block">
+        <div class="input-label">当前年龄</div>
+        <div class="input-row">
+          <input type="number" class="input-field" id="age" value="28" min="18" max="55">
+          <span class="input-suffix">岁</span>
+        </div>
+      </div>
+      <div class="input-block">
+        <div class="input-label">当前年薪</div>
+        <div class="input-row">
+          <input type="number" class="input-field" id="salary" value="25" min="5" max="500">
+          <span class="input-suffix">万</span>
+        </div>
+      </div>
+      <div class="input-block">
+        <div class="input-label">起始本金</div>
+        <div class="input-row">
+          <input type="number" class="input-field" id="principal" value="0" min="-500" max="10000" step="1">
+          <span class="input-suffix">万</span>
+        </div>
+        <div class="input-hint">现有存款 / 投资余额, 可负 (如学贷)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 第二幕 剧本 ========== -->
+<section>
+  <div class="container">
+    <div class="section-num">02 剧本</div>
+    <h2 class="section-title">选一种 <span class="accent">命运</span></h2>
+    
+    <div class="scenarios">
+      <div class="scenario active" data-scenario="hustle">
+        <span class="scenario-emoji">🚀</span>
+        <div class="scenario-name">奋斗型</div>
+        <div class="scenario-desc">互联网 / 金融<br>高峰高，悬崖陡</div>
+      </div>
+      <div class="scenario" data-scenario="stable">
+        <span class="scenario-emoji">🏛️</span>
+        <div class="scenario-name">稳健型</div>
+        <div class="scenario-desc">体制内 / 国企<br>曲线平缓，走得远</div>
+      </div>
+      <div class="scenario" data-scenario="mild">
+        <span class="scenario-emoji">🌱</span>
+        <div class="scenario-name">温和型</div>
+        <div class="scenario-desc">普通白领<br>大多数人的样子</div>
+      </div>
+    </div>
+    
+    <div class="scenario-params">
+      <div class="scenario-params-header">
+        以下是 <span class="scenario-tag" id="scenarioTag">奋斗型</span> 的默认参数, 你可以根据自己情况调整
+      </div>
+      <div class="params-grid">
+        <div class="param-input">
+          <div class="param-label">涨薪频率</div>
+          <div class="param-row">
+            <span style="font-family:var(--num);font-size:22px;font-weight:400;color:var(--text-tertiary)">每</span>
+            <input type="number" class="param-field" id="growthYears" value="2" min="1" max="10">
+            <span class="param-suffix">年涨</span>
+          </div>
+        </div>
+        <div class="param-input">
+          <div class="param-label">涨薪幅度</div>
+          <div class="param-row">
+            <input type="number" class="param-field" id="growthRate" value="20" min="0" max="100">
+            <span class="param-suffix">%</span>
+          </div>
+        </div>
+        <div class="param-input">
+          <div class="param-label">顶薪封顶</div>
+          <div class="param-row">
+            <input type="number" class="param-field" id="peakSalary" value="60" min="10" max="500">
+            <span class="param-suffix">万</span>
+          </div>
+        </div>
+        <div class="param-input">
+          <div class="param-label">退休 / 自由职业 年龄</div>
+          <div class="param-row">
+            <input type="number" class="param-field" id="cliffAge" value="45" min="30" max="70">
+            <span class="param-suffix">岁</span>
+          </div>
+        </div>
+        <div class="param-input">
+          <div class="param-label">之后的年收入</div>
+          <div class="param-row">
+            <input type="number" class="param-field" id="postCliffSalary" value="10" min="0" max="100">
+            <span class="param-suffix">万</span>
+          </div>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--text-tertiary);margin-top:14px;line-height:1.5">
+        💡 不再追求职场高薪的那一年 — 可能是主动选择 (FIRE / 自由职业), 也可能是被动 (裁员 / 行业变化)
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 第三幕 消费 ========== -->
+<section>
+  <div class="container">
+    <div class="section-num">03 生活</div>
+    <h2 class="section-title">你每年花 <span class="accent">多少</span>?</h2>
+    
+    <div class="slider-block">
+      <div class="slider-header">
+        <span class="slider-title">起始年消费</span>
+        <span class="slider-value"><span id="spendingValue">15</span><span class="unit">万 / 年</span></span>
+      </div>
+      <input type="range" id="spending" min="3" max="60" step="1" value="15">
+      <div class="slider-labels">
+        <span>月均 ¥<strong id="monthlySpending">12,500</strong></span>
+        <span id="spendingTier">舒适日常</span>
+      </div>
+      
+      <div class="advanced-toggle" id="spendingToggle">
+        <span class="toggle-text">消费会随年龄变化吗?</span>
+        <span class="toggle-arrow">→</span>
+      </div>
+      
+      <div class="advanced-panel" id="spendingPanel">
+        <div class="advanced-hint">
+          人到中年, 结婚买房生娃 — 消费往往会涨。这里把那些大额支出 <strong>摊到每年的"消费上涨"里</strong>, 比一次性算冲击更接近真实生活。设个上限, 因为消费习惯到一定阶段会稳定。
+        </div>
+        <div class="params-grid">
+          <div class="param-input">
+            <div class="param-label">消费上涨频率</div>
+            <div class="param-row">
+              <span style="font-family:var(--num);font-size:22px;font-weight:400;color:var(--text-tertiary)">每</span>
+              <input type="number" class="param-field" id="spendingGrowYears" value="2" min="1" max="10">
+              <span class="param-suffix">年涨</span>
+            </div>
+          </div>
+          <div class="param-input">
+            <div class="param-label">每次涨多少</div>
+            <div class="param-row">
+              <input type="number" class="param-field" id="spendingGrowRate" value="20" min="0" max="50">
+              <span class="param-suffix">%</span>
+            </div>
+          </div>
+          <div class="param-input">
+            <div class="param-label">消费封顶</div>
+            <div class="param-row">
+              <input type="number" class="param-field" id="spendingCap" value="25" min="5" max="200">
+              <span class="param-suffix">万</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 第四幕 引擎 ========== -->
+<section>
+  <div class="container">
+    <div class="section-num">04 引擎</div>
+    <h2 class="section-title">你的 <span class="accent">复利引擎</span></h2>
+    
+    <div class="view-toggle">
+      <button class="view-toggle-btn active" data-engine-view="select">⚙️ 选择收益率</button>
+      <button class="view-toggle-btn" data-engine-view="compare">📊 收益率对比</button>
+    </div>
+    
+    <div class="view-pane active" id="engineSelect">
+    <div class="return-options">
+      <div class="return-option" data-return="0">
+        <div class="return-pct">0%</div>
+        <div class="return-label">活期<br>不投资</div>
+      </div>
+      <div class="return-option" data-return="3">
+        <div class="return-pct">3%</div>
+        <div class="return-label">银行理财<br>国债</div>
+      </div>
+      <div class="return-option active" data-return="6">
+        <div class="return-pct">6%</div>
+        <div class="return-label">指数定投<br>稳健组合</div>
+      </div>
+      <div class="return-option" data-return="10">
+        <div class="return-pct">10%</div>
+        <div class="return-label">主动投资<br>(高难度)</div>
+      </div>
+      <div class="return-option" data-return="custom">
+        <div class="return-pct">自定义</div>
+        <div class="return-label">填入你的<br>预期</div>
+      </div>
+    </div>
+    
+    <div class="return-custom" id="returnCustom">
+      <span class="return-custom-label">你的预期年化收益率</span>
+      <div class="return-custom-input">
+        <input type="number" id="customReturn" value="8" min="-10" max="50" step="0.5">
+        <span class="param-suffix">%</span>
+      </div>
+    </div>
+    
+    <div class="return-note">
+      <strong>关于收益率的真相</strong>: 长期年化超过 8% 极其困难——大部分散户实际收益低于市场指数, A 股个人投资者的中位数甚至是亏损的。<strong>你设定多高, 不代表能拿到多高</strong>。这只是一个"如果"的假设。
+    </div>
+    </div>
+    
+    <div class="view-pane" id="engineCompare">
+      <div class="chart-wrap" style="margin-bottom:16px">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">同样的收入和消费<br>不同的收益率, 不同的人生</div>
+          </div>
+          <div class="chart-legend" id="compareLegend"></div>
+        </div>
+        <div class="chart-container">
+          <canvas id="compareChart"></canvas>
+        </div>
+        <div class="compare-add-mine">
+          <div class="compare-add-label">想看你的预期收益在哪条曲线?</div>
+          <div class="compare-add-input">
+            <input type="number" id="compareCustomReturn" placeholder="填个数" min="-10" max="50" step="0.5" value="">
+            <span>%</span>
+            <button id="compareCustomApply">加到对比图</button>
+            <button id="compareCustomClear" style="display:none">清除</button>
+          </div>
+        </div>
+      </div>
+      <div class="return-note" id="compareConclusion">
+        <strong>结论</strong>: 加载中...
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== Verdict ========== -->
+<section class="verdict container">
+  <div class="verdict-eyebrow">从现在到 60 岁 · 财富差距</div>
+  <div class="verdict-number"><span class="currency">¥</span><span id="verdictNum">0</span><span class="unit">万</span></div>
+  <div class="verdict-caption">
+    这是 <span class="highlight">复利的你</span> 比 <span class="highlight">不投资的你</span> 多出来的钱<br>
+    它本来可以是你的 —— 只要你早点开始
+  </div>
+</section>
+
+<!-- ========== 双视图 ========== -->
+<section>
+  <div class="container">
+    <div class="section-num">05 揭示</div>
+    <h2 class="section-title">两种人生 <span class="accent">并排</span> 看</h2>
+    
+    <div class="view-toggle">
+      <button class="view-toggle-btn active" data-view="chart">📈 曲线图</button>
+      <button class="view-toggle-btn" data-view="table">📋 逐年表</button>
+    </div>
+    
+    <!-- 视图1: 曲线 -->
+    <div class="view-pane active" id="viewChart">
+      <div class="chart-wrap">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">同样的工资, 同样的消费<br>差别只是 — 有没有让复利工作</div>
+          </div>
+          <div class="chart-legend">
+            <div class="legend-item"><span class="legend-dot green"></span>复利的你</div>
+            <div class="legend-item"><span class="legend-dot gray"></span>不投资的你</div>
+          </div>
+        </div>
+        <div class="chart-container">
+          <canvas id="wealthChart"></canvas>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 视图2: 表格 -->
+    <div class="view-pane" id="viewTable">
+      <div class="table-wrap">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px">
+          <div class="table-hint" style="margin:0">点击"年薪"或"消费"单元格可以修改, 改动会同步到曲线图</div>
+          <button class="reset-overrides" id="resetOverrides">↺ 重置我的修改</button>
+        </div>
+        <div class="table-scroll">
+          <table id="dataTable">
+            <thead>
+              <tr>
+                <th>年龄</th>
+                <th>年份</th>
+                <th>年薪</th>
+                <th>消费</th>
+                <th>年留存</th>
+                <th>不投资</th>
+                <th>复利财富</th>
+                <th>被动收入</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    
+    <div class="milestones">
+      <div class="milestone">
+        <div class="milestone-label">财富自由那一年</div>
+        <div class="milestone-value" id="fireYear">—</div>
+        <div class="milestone-desc" id="fireDesc">投资被动收入足以覆盖年消费<br>从此, 你的钱替你工作</div>
+      </div>
+      <div class="milestone">
+        <div class="milestone-label">被动收入超过年薪</div>
+        <div class="milestone-value" id="overtakeYear">—</div>
+        <div class="milestone-desc" id="overtakeDesc">投资每年赚的, 比你工作赚的还多<br>这是雪球真正变重的那一刻</div>
+      </div>
+      <div class="milestone">
+        <div class="milestone-label">复利的礼物</div>
+        <div class="milestone-value" id="compoundGain">—</div>
+        <div class="milestone-desc">复利"白送"给你的钱<br>—— 而它本来可以更多</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 时间轴叙事 ========== -->
+<section>
+  <div class="container">
+    <div class="section-num">06 切片</div>
+    <h2 class="section-title">拖动时间轴<br>看 <span class="accent">每一年</span> 的你</h2>
+    
+    <div class="timeline-control">
+      <div class="age-display">
+        <div class="age-eyebrow">这一年, 你</div>
+        <div class="age-number" id="timelineAge">35</div>
+        <div class="age-year"><span id="timelineYear">2033</span></div>
+      </div>
+      <div class="timeline-with-marker">
+        <input type="range" id="timeline" min="0" max="32" step="1" value="7">
+        <div class="timeline-markers" id="timelineMarkers"></div>
+      </div>
+      <div class="slider-labels">
+        <span><strong id="timelineStart">28 岁</strong></span>
+        <span><strong id="timelineEnd">60 岁</strong></span>
+      </div>
+    </div>
+    
+    <div class="story-card">
+      <div class="story-stats">
+        <div>
+          <div class="story-stat-label">这一年年薪</div>
+          <div class="story-stat-value" id="storySalary">—</div>
+        </div>
+        <div>
+          <div class="story-stat-label">复利账户</div>
+          <div class="story-stat-value accent" id="storyWealth">—</div>
+        </div>
+        <div>
+          <div class="story-stat-label">被动收入</div>
+          <div class="story-stat-value accent" id="storyPassive">—</div>
+        </div>
+      </div>
+      <div class="story-narrative" id="storyText">加载中...</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 分享 ========== -->
+<section style="padding-bottom:0">
+  <div class="container">
+    <div class="share-cta">
+      <div class="share-cta-text">
+        <div class="share-cta-title">把这张图发给你在意的人</div>
+        <div class="share-cta-desc">让 ta 也看见 "让钱替自己工作" 的那条曲线</div>
+      </div>
+      <button class="share-btn" id="generateShare">
+        <span>生成分享图</span>
+        <span class="share-btn-arrow">→</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- 分享卡片预览模态层 -->
+<div class="share-modal" id="shareModal">
+  <div class="share-modal-bg"></div>
+  <div class="share-modal-content">
+    <button class="share-modal-close" id="shareClose">×</button>
+    <div class="share-modal-title">长按图片保存 / 转发</div>
+    <div class="share-modal-toggle">
+      <button class="share-modal-toggle-btn active" data-share-type="table">📋 表格版</button>
+      <button class="share-modal-toggle-btn" data-share-type="chart">📈 曲线版</button>
+    </div>
+    <div class="share-canvas-wrap">
+      <img id="sharePreview" alt="分享图预览" />
+      <div class="share-loading" id="shareLoading">
+        <div class="share-loading-spinner"></div>
+        <div>正在生成...</div>
+      </div>
+    </div>
+    <div class="share-actions">
+      <button class="share-action-btn" id="shareDownload">下载图片</button>
+      <button class="share-action-btn secondary" id="shareRegen">重新生成</button>
+    </div>
+  </div>
+</div>
+
+<!-- 隐藏的卡片渲染源, 用 html2canvas 截这个 -->
+<div id="shareCardSource" style="position:fixed;top:-9999px;left:-9999px;z-index:-1">
+  <div class="share-card" id="shareCard">
+    <!-- 头部 -->
+    <div class="sc-header">
+      <div class="sc-eyebrow">THE COMPOUND LIFE · 复利人生</div>
+      <div class="sc-title" id="scTitle">我的<span class="emphasis">复利</span>账本</div>
+    </div>
+    
+    <!-- 结论卡片 -->
+    <div class="sc-conclusion">
+      <div class="sc-conclusion-icon">🎯</div>
+      <div class="sc-conclusion-text" id="scConclusion">—</div>
+    </div>
+    
+    <!-- 三个核心数字 -->
+    <div class="sc-stats">
+      <div class="sc-stat">
+        <div class="sc-stat-label">60 岁时复利财富</div>
+        <div class="sc-stat-value" id="scStatWealth">—</div>
+      </div>
+      <div class="sc-stat">
+        <div class="sc-stat-label">财富自由那一年</div>
+        <div class="sc-stat-value" id="scStatFire">—</div>
+      </div>
+      <div class="sc-stat">
+        <div class="sc-stat-label">复利白送给我</div>
+        <div class="sc-stat-value" id="scStatGift">—</div>
+      </div>
+    </div>
+    
+    <!-- 主内容区 - 由JS切换内容 -->
+    <div class="sc-main" id="scMain">
+      <!-- JS 渲染:曲线 OR 表格 -->
+    </div>
+    
+    <!-- 底部 -->
+    <div class="sc-footer">
+      <div class="sc-footer-quote" id="scFooterQuote">单位:万元 · 同样的工资和消费, 让复利替你工作</div>
+      <div class="sc-footer-brand">
+        <div class="sc-qr"></div>
+        <div class="sc-brand-text">
+          <div class="sc-brand-name">复利人生</div>
+          <div class="sc-brand-tag">扫码体验你自己的曲线</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="philosophy container">
+  <div class="philosophy-quote">
+    "复利是世界第八大奇迹<br>懂它的人 — <span class="accent">赚到它</span><br>不懂的人 — 付给它"
+  </div>
+  <div class="philosophy-author">— ALBERT EINSTEIN</div>
+</section>
+
+<footer>
+  <div class="container">
+    本工具仅供个人财务思考之用 · 数据基于简化模型, 不构成投资建议<br>
+    收益率假设不代表实际可达成水平
+  </div>
+</footer>
+
+<script>
+const SCENARIOS = {
+  hustle: {name:'奋斗型', growthYears:2, growthRate:20, peakSalary:60, cliffAge:45, postCliffSalary:10},
+  stable: {name:'稳健型', growthYears:3, growthRate:15, peakSalary:35, cliffAge:60, postCliffSalary:0},
+  mild:   {name:'温和型', growthYears:3, growthRate:12, peakSalary:25, cliffAge:55, postCliffSalary:5}
+};
+
+const state = {
+  age: 28, salary: 25, principal: 0, scenario: 'hustle',
+  // 薪资剧本
+  growthYears: 2, growthRate: 20, peakSalary: 60, cliffAge: 45, postCliffSalary: 10,
+  // 消费
+  spending: 15,
+  spendingGrowYears: 2, spendingGrowRate: 20, spendingCap: 25,
+  spendingGrowEnabled: false,
+  // 收益率
+  returnRate: 6, customReturn: 8, useCustom: false,
+  endAge: 60,
+  overrides: {}
+};
+
+function simulate(){
+  const yearsCount = state.endAge - state.age + 1;
+  const data = [];
+  
+  // salary 和 spending 都是 "上一年的实际值", 用作下一年规则推演的起点
+  // 这样表格里的覆盖会自动作为后续年份的新起点
+  let salary = state.salary;
+  let spending = state.spending;
+  
+  let cumulativeSimple = state.principal;
+  let cumulativeCompound = state.principal;
+  const r = (state.useCustom ? state.customReturn : state.returnRate) / 100;
+  
+  for(let i=0; i<yearsCount; i++){
+    const currentAge = state.age + i;
+    const year = 2026 + i;
+    const override = state.overrides[currentAge] || {};
+    
+    // ====== 决定本年薪资 ======
+    let actualSalary;
+    if(override.salary !== undefined){
+      // 用户在表格里钉死了这年的薪资
+      actualSalary = override.salary;
+    } else if(currentAge >= state.cliffAge){
+      // 断崖
+      actualSalary = state.postCliffSalary;
+    } else if(i === 0){
+      // 第一年, 用起薪
+      actualSalary = state.salary;
+    } else if(i % state.growthYears === 0){
+      // 涨薪年, 基于"上一年实际薪资"涨, 不超过顶薪
+      actualSalary = Math.min(salary * (1 + state.growthRate/100), state.peakSalary);
+    } else {
+      // 非涨薪年, 维持上一年
+      actualSalary = salary;
+    }
+    
+    // ====== 决定本年消费 ======
+    let actualSpending;
+    if(override.spending !== undefined){
+      actualSpending = override.spending;
+    } else if(i === 0){
+      actualSpending = state.spending;
+    } else if(state.spendingGrowEnabled && i % state.spendingGrowYears === 0){
+      actualSpending = Math.min(spending * (1 + state.spendingGrowRate/100), state.spendingCap);
+    } else {
+      actualSpending = spending;
+    }
+    
+    // 更新"上一年实际值"作为下一轮推演的起点
+    salary = actualSalary;
+    spending = actualSpending;
+    
+    // ====== 财富计算 ======
+    const yearSaving = actualSalary - actualSpending;
+    cumulativeSimple += yearSaving;
+    cumulativeCompound = cumulativeCompound * (1+r) + yearSaving;
+    const passive = cumulativeCompound * r;
+    
+    data.push({
+      age: currentAge, year,
+      salary: actualSalary,
+      spending: actualSpending,
+      saving: yearSaving,
+      simple: cumulativeSimple,
+      compound: cumulativeCompound,
+      passive: passive,
+      isCliff: currentAge === state.cliffAge,
+      salaryOverridden: override.salary !== undefined,
+      spendingOverridden: override.spending !== undefined
+    });
+  }
+  return data;
+}
+
+function findFireYear(data){
+  for(const d of data){ if(d.passive >= d.spending) return d; }
+  return null;
+}
+function findOvertakeYear(data){
+  for(const d of data){ if(d.passive >= d.salary && d.salary > 0) return d; }
+  return null;
+}
+
+function fmtNum(n){ return Math.round(n).toLocaleString('zh-CN'); }
+function fmtWan(n){ 
+  if(Math.abs(n) >= 10000) return (n/10000).toFixed(2) + ' 亿';
+  return Math.round(n).toLocaleString('zh-CN') + ' 万';
+}
+
+let chart = null;
+function renderChart(data){
+  const ctx = document.getElementById('wealthChart').getContext('2d');
+  const labels = data.map(d => d.age + '岁');
+  if(chart){ chart.destroy(); chart = null; }
+  
+  const gradient = ctx.createLinearGradient(0,0,0,420);
+  gradient.addColorStop(0,'rgba(42,143,71,0.18)');
+  gradient.addColorStop(1,'rgba(42,143,71,0.01)');
+  
+  chart = new Chart(ctx, {
+    type:'line',
+    data:{
+      labels,
+      datasets:[
+        {
+          label:'不投资的你',
+          data: data.map(d => d.simple),
+          borderColor:'rgba(0,0,0,0.35)',
+          borderWidth:1.5,
+          borderDash:[5,5],
+          pointRadius:0,
+          tension:0.3,
+          fill:false
+        },
+        {
+          label:'复利的你',
+          data: data.map(d => d.compound),
+          borderColor:'#2A8F47',
+          borderWidth:2.5,
+          pointRadius:0,
+          pointHoverRadius:6,
+          pointHoverBackgroundColor:'#2A8F47',
+          pointHoverBorderColor:'#fff',
+          pointHoverBorderWidth:2,
+          tension:0.3,
+          fill:true,
+          backgroundColor:gradient
+        }
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      interaction:{mode:'index', intersect:false},
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          backgroundColor:'rgba(255,255,255,0.98)',
+          borderColor:'rgba(0,0,0,0.08)',
+          borderWidth:1,
+          padding:14,
+          titleFont:{family:'Manrope',size:12,weight:'600'},
+          titleColor:'#9B9B9B',
+          bodyFont:{family:'Manrope',size:13,weight:'500'},
+          bodyColor:'#1A1A1A',
+          displayColors:true,
+          boxPadding:6,
+          borderRadius:10,
+          callbacks:{
+            label: ctx => ' ' + ctx.dataset.label + ': ¥ ' + fmtNum(ctx.parsed.y) + ' 万'
+          }
+        }
+      },
+      scales:{
+        x:{
+          grid:{display:false},
+          ticks:{color:'rgba(0,0,0,0.4)',font:{family:'Manrope',size:11},maxRotation:0,autoSkipPadding:30},
+          border:{color:'rgba(0,0,0,0.08)'}
+        },
+        y:{
+          grid:{color:'rgba(0,0,0,0.04)'},
+          ticks:{
+            color:'rgba(0,0,0,0.4)',
+            font:{family:'Manrope',size:11},
+            callback: v => v >= 10000 ? (v/10000).toFixed(1) + 'k 万' : v + ' 万'
+          },
+          border:{display:false}
+        }
+      }
+    }
+  });
+}
+
+function renderTable(data){
+  const tbody = document.getElementById('tableBody');
+  const fireYear = findFireYear(data);
+  
+  tbody.innerHTML = data.map(d => {
+    let cls = '';
+    if(d.isCliff) cls = 'cliff-row';
+    if(fireYear && d.age === fireYear.age) cls = 'fire-row';
+    
+    const salaryClass = d.salaryOverridden ? 'editable-cell overridden' : 'editable-cell';
+    const spendingClass = d.spendingOverridden ? 'editable-cell overridden' : 'editable-cell';
+    
+    return `<tr class="${cls}">
+      <td>${d.age} 岁</td>
+      <td>${d.year}</td>
+      <td><span class="${salaryClass}" data-field="salary" data-age="${d.age}" title="点击修改">${d.salary.toFixed(1)}</span></td>
+      <td><span class="${spendingClass}" data-field="spending" data-age="${d.age}" title="点击修改">${d.spending.toFixed(1)}</span></td>
+      <td>${d.saving >= 0 ? d.saving.toFixed(1) : '<span style="color:var(--warn)">' + d.saving.toFixed(1) + '</span>'}</td>
+      <td>${fmtNum(d.simple)}</td>
+      <td class="col-compound">${fmtNum(d.compound)}</td>
+      <td class="col-passive">${fmtNum(d.passive)}</td>
+    </tr>`;
+  }).join('');
+  
+  // 绑定可编辑单元格
+  tbody.querySelectorAll('.editable-cell').forEach(cell => {
+    cell.addEventListener('click', () => {
+      const field = cell.dataset.field;
+      const age = parseInt(cell.dataset.age);
+      const currentValue = parseFloat(cell.textContent);
+      
+      const input = document.createElement('input');
+      input.type = 'number';
+      input.className = 'cell-input';
+      input.value = currentValue;
+      input.step = '0.5';
+      
+      cell.replaceWith(input);
+      input.focus();
+      input.select();
+      
+      const commit = () => {
+        const newVal = parseFloat(input.value);
+        if(!isNaN(newVal) && newVal !== currentValue){
+          if(!state.overrides[age]) state.overrides[age] = {};
+          state.overrides[age][field] = newVal;
+          update();
+        } else {
+          update();
+        }
+      };
+      input.addEventListener('blur', commit);
+      input.addEventListener('keydown', e => {
+        if(e.key === 'Enter') input.blur();
+        if(e.key === 'Escape'){ input.value = currentValue; input.blur(); }
+      });
+    });
+  });
+}
+
+function renderVerdict(data){
+  const last = data[data.length-1];
+  const diff = last.compound - last.simple;
+  document.getElementById('verdictNum').textContent = fmtNum(Math.max(0, diff));
+  
+  const fireYear = findFireYear(data);
+  if(fireYear){
+    document.getElementById('fireYear').textContent = fireYear.age + ' 岁';
+    document.getElementById('fireDesc').innerHTML = 
+      `${fireYear.year} 年, 你的投资每年产生 <strong>${fmtNum(fireYear.passive)} 万</strong>被动收入<br>已经超过你的年消费`;
+  } else {
+    document.getElementById('fireYear').textContent = '未达成';
+    document.getElementById('fireDesc').innerHTML = '在当前参数下, 投资收益无法<br>覆盖消费 — 试试降低消费或延长时间';
+  }
+  
+  const overtake = findOvertakeYear(data);
+  if(overtake){
+    document.getElementById('overtakeYear').textContent = overtake.age + ' 岁';
+    document.getElementById('overtakeDesc').innerHTML = 
+      `这一年, 你的投资被动收入<br><strong>${fmtNum(overtake.passive)}</strong> 万 > 工资 <strong>${fmtNum(overtake.salary)}</strong> 万`;
+  } else {
+    document.getElementById('overtakeYear').textContent = '未达成';
+    document.getElementById('overtakeDesc').innerHTML = '在 60 岁前, 工资还是大头<br>说明你需要更长时间, 或更高收益';
+  }
+  
+  document.getElementById('compoundGain').textContent = fmtNum(Math.max(0, diff)) + ' 万';
+}
+
+function renderStory(data){
+  const idx = parseInt(document.getElementById('timeline').value);
+  const d = data[Math.min(idx, data.length-1)];
+  if(!d) return;
+  
+  document.getElementById('timelineAge').textContent = d.age;
+  document.getElementById('timelineYear').textContent = d.year;
+  document.getElementById('storySalary').textContent = d.salary.toFixed(1) + ' 万';
+  document.getElementById('storyWealth').textContent = fmtNum(d.compound) + ' 万';
+  document.getElementById('storyPassive').textContent = fmtNum(d.passive) + ' 万';
+  
+  const fireYear = findFireYear(data);
+  let story = '';
+  
+  if(d.age < 30){
+    story = `你正处在 <span class="highlight">人生最值钱的阶段</span> — 不是因为这一年赚得最多, 而是因为 <span class="accent">这一年存下的每块钱, 有最长的时间去复利</span>。`;
+  } else if(d.age >= state.cliffAge && state.postCliffSalary > 0){
+    story = `${state.cliffAge} 岁那年, 你离开了职场主战场。年收入从顶峰回落到 <span class="highlight">${d.salary.toFixed(0)} 万</span>。<br><br>但你不慌 — 复利账户里有 <span class="accent">${fmtNum(d.compound)} 万</span>, 每年自己产生 <span class="accent">${fmtNum(d.passive)} 万</span>。<br><br>这就是为什么要早投资。`;
+  } else if(d.age >= state.cliffAge){
+    story = `${state.cliffAge} 岁退休了。但你的复利没有退休 — <span class="accent">${fmtNum(d.compound)} 万</span> 本金, 每年继续产生 <span class="accent">${fmtNum(d.passive)} 万</span>。<br><br>钱在替你工作, 而你, 终于可以休息了。`;
+  } else if(fireYear && d.age >= fireYear.age){
+    story = `从 ${fireYear.age} 岁起, <span class="accent">投资被动收入已经覆盖消费</span>。即使现在辞职, 你的钱也能养你。<br><br>这就是 <span class="highlight">财富自由</span>。`;
+  } else {
+    story = `这一年, 工资 <span class="highlight">${d.salary.toFixed(0)} 万</span>, 复利账户已经在每年产生 <span class="accent">${fmtNum(d.passive)} 万</span> 被动收入。<br><br>雪球, 开始有点重量了。`;
+  }
+  
+  document.getElementById('storyText').innerHTML = story;
+}
+
+function update(){
+  const data = simulate();
+  renderChart(data);
+  renderTable(data);
+  renderVerdict(data);
+  renderStory(data);
+  renderTimelineMarkers(data);
+  renderReturnComparison(data);
+  
+  const tl = document.getElementById('timeline');
+  tl.max = data.length - 1;
+  if(parseInt(tl.value) > data.length - 1) tl.value = data.length - 1;
+  document.getElementById('timelineStart').textContent = state.age + ' 岁';
+  document.getElementById('timelineEnd').textContent = state.endAge + ' 岁';
+  
+  document.getElementById('monthlySpending').textContent = 
+    Math.round(state.spending * 10000 / 12).toLocaleString('zh-CN');
+  
+  // 消费等级提示
+  const tier = state.spending <= 8 ? '极简主义' : 
+               state.spending <= 18 ? '舒适日常' : 
+               state.spending <= 30 ? '中产生活' : '精致生活';
+  document.getElementById('spendingTier').textContent = tier;
+  
+  // 重置按钮显示
+  const hasOverrides = Object.keys(state.overrides).length > 0;
+  const resetBtn = document.getElementById('resetOverrides');
+  if(resetBtn) resetBtn.classList.toggle('show', hasOverrides);
+}
+
+// 渲染收益率对比折线图
+let compareChart = null;
+function simulateWithRate(rate){
+  const yearsCount = state.endAge - state.age + 1;
+  const data = [];
+  let salary = state.salary;
+  let spending = state.spending;
+  let cumulativeCompound = state.principal;
+  const r = rate / 100;
+  
+  for(let i=0; i<yearsCount; i++){
+    const currentAge = state.age + i;
+    const override = state.overrides[currentAge] || {};
+    
+    let actualSalary;
+    if(override.salary !== undefined) actualSalary = override.salary;
+    else if(currentAge >= state.cliffAge) actualSalary = state.postCliffSalary;
+    else if(i === 0) actualSalary = state.salary;
+    else if(i % state.growthYears === 0) actualSalary = Math.min(salary * (1 + state.growthRate/100), state.peakSalary);
+    else actualSalary = salary;
+    
+    let actualSpending;
+    if(override.spending !== undefined) actualSpending = override.spending;
+    else if(i === 0) actualSpending = state.spending;
+    else if(state.spendingGrowEnabled && i % state.spendingGrowYears === 0) actualSpending = Math.min(spending * (1 + state.spendingGrowRate/100), state.spendingCap);
+    else actualSpending = spending;
+    
+    salary = actualSalary;
+    spending = actualSpending;
+    
+    const yearSaving = actualSalary - actualSpending;
+    cumulativeCompound = cumulativeCompound * (1+r) + yearSaving;
+    data.push({age: currentAge, compound: cumulativeCompound});
+  }
+  return data;
+}
+
+function renderReturnComparison(){
+  const ctx = document.getElementById('compareChart');
+  if(!ctx) return;
+  
+  // 标准对比档位
+  const baseRates = [0, 3, 6, 10];
+  const baseColors = ['#B8B8B8', '#9AA8B8', '#7AA890', '#4A9B66'];
+  
+  // 用户当前选择的收益率
+  const currentRate = state.useCustom ? state.customReturn : state.returnRate;
+  // 检查是否是"自定义"且不是基准档位之一
+  const isCustomShown = state.useCustom && !baseRates.includes(currentRate);
+  
+  // 构建datasets
+  const datasets = baseRates.map((rate, i) => {
+    const data = simulateWithRate(rate);
+    return {
+      label: rate + '%',
+      data: data.map(d => d.compound),
+      borderColor: baseColors[i],
+      borderWidth: 1.8,
+      borderDash: [],
+      pointRadius: 0,
+      pointHoverRadius: 5,
+      tension: 0.3,
+      fill: false,
+      _isUser: false
+    };
+  });
+  
+  // 加入用户的自定义曲线
+  if(isCustomShown){
+    const userData = simulateWithRate(currentRate);
+    datasets.push({
+      label: '你 ' + currentRate + '%',
+      data: userData.map(d => d.compound),
+      borderColor: '#2A8F47',
+      borderWidth: 3.5,
+      pointRadius: 0,
+      pointHoverRadius: 6,
+      tension: 0.3,
+      fill: false,
+      _isUser: true
+    });
+  }
+  
+  const sampleData = simulateWithRate(0);
+  const labels = sampleData.map(d => d.age + '岁');
+  
+  if(compareChart) compareChart.destroy();
+  compareChart = new Chart(ctx, {
+    type: 'line',
+    data: { labels, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: {mode:'index', intersect:false},
+      plugins: {
+        legend: {display: false},
+        tooltip: {
+          backgroundColor: 'rgba(255,255,255,0.98)',
+          borderColor: 'rgba(0,0,0,0.08)',
+          borderWidth: 1, padding: 14,
+          titleFont: {family:'Manrope', size:12, weight:'600'},
+          titleColor: '#9B9B9B',
+          bodyFont: {family:'Manrope', size:13, weight:'500'},
+          bodyColor: '#1A1A1A',
+          displayColors: true, boxPadding: 6, borderRadius: 10,
+          callbacks: {
+            label: ctx => {
+              const ds = ctx.dataset;
+              const prefix = ds._isUser ? ' ⭐ ' : ' ';
+              return prefix + ds.label + ': ¥ ' + fmtNum(ctx.parsed.y) + ' 万';
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: {display: false},
+          ticks: {color:'rgba(0,0,0,0.4)', font:{family:'Manrope', size:11}, maxRotation:0, autoSkipPadding:30},
+          border: {color:'rgba(0,0,0,0.08)'}
+        },
+        y: {
+          grid: {color:'rgba(0,0,0,0.04)'},
+          ticks: {
+            color:'rgba(0,0,0,0.4)',
+            font:{family:'Manrope', size:11},
+            callback: v => v >= 10000 ? (v/10000).toFixed(1) + 'k 万' : v + ' 万'
+          },
+          border: {display: false}
+        }
+      }
+    }
+  });
+  
+  // 自定义图例
+  const legendEl = document.getElementById('compareLegend');
+  if(legendEl){
+    let html = baseRates.map((rate, i) => 
+      `<div class="legend-item"><span class="legend-dot" style="background:${baseColors[i]}"></span>${rate}%</div>`
+    ).join('');
+    if(isCustomShown){
+      html += `<div class="legend-item legend-item-user"><span class="legend-dot" style="background:#2A8F47;box-shadow:0 0 0 3px rgba(42,143,71,0.2)"></span><strong>你 ${currentRate}%</strong></div>`;
+    }
+    legendEl.innerHTML = html;
+  }
+  
+  // 结论文案
+  const conclusionEl = document.getElementById('compareConclusion');
+  if(conclusionEl){
+    const yearsTotal = state.endAge - state.age;
+    const data0 = simulateWithRate(0);
+    const data10 = simulateWithRate(10);
+    const final0 = data0[data0.length-1].compound;
+    const final10 = data10[data10.length-1].compound;
+    const diff = final10 - final0;
+    
+    let extra = '';
+    if(isCustomShown){
+      const userData = simulateWithRate(currentRate);
+      const finalUser = userData[userData.length-1].compound;
+      extra = `<br><br>你设定的 <strong style="color:var(--accent)">${currentRate}%</strong> 收益率, 60岁会有 <strong style="color:var(--accent)">${fmtNum(finalUser)} 万</strong>。`;
+    }
+    
+    conclusionEl.innerHTML = `<strong>结论</strong>: 同样的收入, 同样的消费, 同样存了 ${yearsTotal} 年。<br>0% 收益的你, 最终有 <strong>${fmtNum(final0)} 万</strong>; 10% 收益的你, 有 <strong>${fmtNum(final10)} 万</strong>。<br>差了 <strong style="color:var(--accent)">${fmtNum(diff)} 万</strong> — 这就是复利的力量。${extra}`;
+  }
+}
+
+// 渲染时间轴上的财富自由刻度标记
+function renderTimelineMarkers(data){
+  const markersEl = document.getElementById('timelineMarkers');
+  if(!markersEl) return;
+  markersEl.innerHTML = '';
+  
+  const fireYear = findFireYear(data);
+  if(!fireYear) return;
+  
+  const idx = data.indexOf(fireYear);
+  const total = data.length - 1;
+  if(total <= 0) return;
+  const pct = (idx / total) * 100;
+  
+  const marker = document.createElement('div');
+  marker.className = 'timeline-marker';
+  marker.style.left = pct + '%';
+  marker.innerHTML = `
+    <div class="timeline-marker-label">${fireYear.age} 岁 · 财富自由</div>
+    <div class="timeline-marker-dot"></div>
+  `;
+  marker.addEventListener('click', () => {
+    document.getElementById('timeline').value = idx;
+    renderStory(simulate());
+  });
+  markersEl.appendChild(marker);
+}
+
+// ========== 事件绑定 ==========
+document.getElementById('age').addEventListener('input', e => {
+  const v = parseInt(e.target.value);
+  if(isNaN(v)) return;
+  state.age = Math.max(18, Math.min(55, v));
+  state.overrides = {};
+  update();
+});
+document.getElementById('salary').addEventListener('input', e => {
+  const v = parseFloat(e.target.value);
+  if(isNaN(v)) return;
+  state.salary = Math.max(5, v);
+  state.overrides = {};
+  update();
+});
+document.getElementById('principal').addEventListener('input', e => {
+  const v = parseFloat(e.target.value);
+  if(isNaN(v)) return;
+  state.principal = v;
+  state.overrides = {};
+  update();
+});
+
+['growthYears','growthRate','peakSalary','cliffAge','postCliffSalary'].forEach(id => {
+  document.getElementById(id).addEventListener('input', e => {
+    const v = parseFloat(e.target.value);
+    if(isNaN(v)) return;
+    state[id] = v;
+    state.overrides = {};
+    update();
+  });
+});
+
+document.querySelectorAll('.scenario').forEach(el => {
+  el.addEventListener('click', () => {
+    document.querySelectorAll('.scenario').forEach(s => s.classList.remove('active'));
+    el.classList.add('active');
+    state.scenario = el.dataset.scenario;
+    const sc = SCENARIOS[state.scenario];
+    state.growthYears = sc.growthYears;
+    state.growthRate = sc.growthRate;
+    state.peakSalary = sc.peakSalary;
+    state.cliffAge = sc.cliffAge;
+    state.postCliffSalary = sc.postCliffSalary;
+    state.overrides = {};
+    
+    // 同步 UI
+    document.getElementById('growthYears').value = sc.growthYears;
+    document.getElementById('growthRate').value = sc.growthRate;
+    document.getElementById('peakSalary').value = sc.peakSalary;
+    document.getElementById('cliffAge').value = sc.cliffAge;
+    document.getElementById('postCliffSalary').value = sc.postCliffSalary;
+    document.getElementById('scenarioTag').textContent = sc.name;
+    update();
+  });
+});
+
+document.getElementById('spending').addEventListener('input', e => {
+  state.spending = parseInt(e.target.value);
+  document.getElementById('spendingValue').textContent = state.spending;
+  state.overrides = {};
+  update();
+});
+
+// 消费高级面板展开/折叠
+document.getElementById('spendingToggle').addEventListener('click', () => {
+  const toggle = document.getElementById('spendingToggle');
+  const panel = document.getElementById('spendingPanel');
+  const expanded = toggle.classList.toggle('expanded');
+  panel.classList.toggle('expanded', expanded);
+  state.spendingGrowEnabled = expanded;
+  // 切换文案
+  toggle.querySelector('.toggle-text').textContent = expanded 
+    ? '消费会随年龄变化 (按下方参数推演)' 
+    : '消费会随年龄变化吗?';
+  state.overrides = {};
+  update();
+});
+
+// 消费高级参数
+['spendingGrowYears','spendingGrowRate','spendingCap'].forEach(id => {
+  document.getElementById(id).addEventListener('input', e => {
+    const v = parseFloat(e.target.value);
+    if(isNaN(v)) return;
+    state[id] = v;
+    state.overrides = {};
+    update();
+  });
+});
+
+// 重置覆盖按钮
+document.getElementById('resetOverrides').addEventListener('click', () => {
+  state.overrides = {};
+  update();
+});
+
+document.querySelectorAll('.return-option').forEach(el => {
+  el.addEventListener('click', () => {
+    document.querySelectorAll('.return-option').forEach(s => s.classList.remove('active'));
+    el.classList.add('active');
+    const v = el.dataset.return;
+    if(v === 'custom'){
+      state.useCustom = true;
+      document.getElementById('returnCustom').classList.add('show');
+    } else {
+      state.useCustom = false;
+      state.returnRate = parseInt(v);
+      document.getElementById('returnCustom').classList.remove('show');
+    }
+    update();
+  });
+});
+
+document.getElementById('customReturn').addEventListener('input', e => {
+  const v = parseFloat(e.target.value);
+  if(isNaN(v)) return;
+  state.customReturn = v;
+  if(state.useCustom) update();
+});
+
+document.getElementById('timeline').addEventListener('input', () => {
+  renderStory(simulate());
+});
+
+// 对比视图里的"加我自己"按钮
+document.getElementById('compareCustomApply').addEventListener('click', () => {
+  const input = document.getElementById('compareCustomReturn');
+  const v = parseFloat(input.value);
+  if(isNaN(v)) return;
+  state.useCustom = true;
+  state.customReturn = v;
+  // 同步选择视图: 激活"自定义"档位
+  document.querySelectorAll('.return-option').forEach(s => s.classList.remove('active'));
+  document.querySelector('.return-option[data-return="custom"]').classList.add('active');
+  document.getElementById('returnCustom').classList.add('show');
+  document.getElementById('customReturn').value = v;
+  // 显示清除按钮
+  document.getElementById('compareCustomClear').style.display = 'inline-block';
+  update();
+});
+
+document.getElementById('compareCustomClear').addEventListener('click', () => {
+  state.useCustom = false;
+  state.returnRate = 6;
+  document.getElementById('compareCustomReturn').value = '';
+  document.getElementById('compareCustomClear').style.display = 'none';
+  // 同步选择视图: 回到默认 6%
+  document.querySelectorAll('.return-option').forEach(s => s.classList.remove('active'));
+  document.querySelector('.return-option[data-return="6"]').classList.add('active');
+  document.getElementById('returnCustom').classList.remove('show');
+  update();
+});
+
+// 视图切换 - 第05幕(图表/表格)
+document.querySelectorAll('.view-toggle-btn[data-view]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    // 只操作同一个toggle组里的按钮
+    btn.parentElement.querySelectorAll('.view-toggle-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const view = btn.dataset.view;
+    // 只操作第05幕的两个pane
+    ['viewChart', 'viewTable'].forEach(id => {
+      document.getElementById(id).classList.remove('active');
+    });
+    document.getElementById('view' + view.charAt(0).toUpperCase() + view.slice(1)).classList.add('active');
+    if(view === 'chart' && chart) chart.resize();
+  });
+});
+
+// 视图切换 - 第04幕(选择/对比)
+document.querySelectorAll('.view-toggle-btn[data-engine-view]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    btn.parentElement.querySelectorAll('.view-toggle-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const view = btn.dataset.engineView;
+    // 只操作第04幕的两个pane
+    ['engineSelect', 'engineCompare'].forEach(id => {
+      document.getElementById(id).classList.remove('active');
+    });
+    document.getElementById('engine' + view.charAt(0).toUpperCase() + view.slice(1)).classList.add('active');
+    if(view === 'compare'){
+      // 切到对比视图时, 同步自定义input显示
+      if(state.useCustom){
+        document.getElementById('compareCustomReturn').value = state.customReturn;
+        document.getElementById('compareCustomClear').style.display = 'inline-block';
+      } else {
+        document.getElementById('compareCustomReturn').value = '';
+        document.getElementById('compareCustomClear').style.display = 'none';
+      }
+      if(compareChart) compareChart.resize();
+    }
+  });
+});
+
+
+// ========== 分享卡片 - 统一渲染 ==========
+let shareChartInstance = null;
+
+function renderShareCardCommon(){
+  // 共用元素填充: 标题/结论/三个数字/底部
+  const data = simulate();
+  const last = data[data.length-1];
+  const fireYear = findFireYear(data);
+  const diff = last.compound - last.simple;
+  
+  // 三个核心数字
+  document.getElementById('scStatWealth').textContent = fmtNum(last.compound) + ' 万';
+  document.getElementById('scStatFire').textContent = fireYear ? fireYear.age + ' 岁' : '路途中';
+  document.getElementById('scStatGift').textContent = fmtNum(Math.max(0, diff)) + ' 万';
+  
+  // 结论文案 - 根据情境
+  const conclusionEl = document.getElementById('scConclusion');
+  let conclusion = '';
+  if(fireYear){
+    const yearsToFire = fireYear.age - state.age;
+    if(yearsToFire <= 0){
+      conclusion = `<strong>你已经财富自由了!</strong><br>钱在替你工作, 60 岁会有 <strong>${fmtNum(last.compound)} 万</strong>。`;
+    } else {
+      conclusion = `再过 <strong>${yearsToFire} 年</strong>, 我就能让钱替我工作 — 那一年, 我 <strong>${fireYear.age} 岁</strong>。`;
+    }
+  } else {
+    conclusion = `按当前参数, 在 60 岁前还到不了财富自由 — 但复利仍多帮我攒了 <strong>${fmtNum(Math.max(0,diff))} 万</strong>。`;
+  }
+  conclusionEl.innerHTML = conclusion;
+  
+  return data;
+}
+
+// 渲染曲线版的主内容
+function renderShareCardChart(){
+  const data = renderShareCardCommon();
+  const r = state.useCustom ? state.customReturn : state.returnRate;
+  
+  // 主内容: 注入 canvas
+  const main = document.getElementById('scMain');
+  main.className = 'sc-main sc-main-chart';
+  main.innerHTML = `
+    <canvas id="shareChart" width="900" height="900"></canvas>
+    <div class="sc-chart-legend">
+      <div><span class="legend-dot green"></span>复利的我</div>
+      <div><span class="legend-dot gray"></span>不投资的我</div>
+      <div><span class="legend-dot stage-yellow"></span>攒钱期</div>
+      <div><span class="legend-dot stage-green"></span>自由期</div>
+    </div>
+  `;
+  
+  // footer 文案
+  document.getElementById('scFooterQuote').textContent = `单位:万元 · 在 ${r}% 年化收益下的财富轨迹`;
+  
+  // 渲染图表
+  const ctx = document.getElementById('shareChart').getContext('2d');
+  const labels = data.map(d => d.age + '岁');
+  
+  if(shareChartInstance) shareChartInstance.destroy();
+  
+  const overtakeYear = findOvertakeYear(data);
+  const fireYearShare = findFireYear(data);
+  const overtakeIdx = overtakeYear ? data.indexOf(overtakeYear) : -1;
+  const fireIdx = fireYearShare ? data.indexOf(fireYearShare) : -1;
+  
+  const gradient = ctx.createLinearGradient(0,0,0,900);
+  gradient.addColorStop(0,'rgba(42,143,71,0.28)');
+  gradient.addColorStop(1,'rgba(42,143,71,0.02)');
+  
+  const stagesPlugin = {
+    id: 'stagesPlugin',
+    beforeDatasetsDraw(chart) {
+      const {ctx, chartArea, scales} = chart;
+      if(!chartArea) return;
+      const {left, right, top, bottom} = chartArea;
+      ctx.save();
+      const fireBoundary = fireIdx > 0 ? scales.x.getPixelForValue(fireIdx) : null;
+      
+      if(fireBoundary !== null){
+        ctx.fillStyle = 'rgba(212, 175, 90, 0.10)';
+        ctx.fillRect(left, top, fireBoundary - left, bottom - top);
+        ctx.fillStyle = 'rgba(42, 143, 71, 0.10)';
+        ctx.fillRect(fireBoundary, top, right - fireBoundary, bottom - top);
+      } else {
+        ctx.fillStyle = 'rgba(212, 175, 90, 0.10)';
+        ctx.fillRect(left, top, right - left, bottom - top);
+      }
+      
+      // 阶段标签
+      ctx.font = '600 22px Plus Jakarta Sans, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'top';
+      const labelY = top + 12;
+      
+      if(fireBoundary !== null){
+        const stage1Mid = (left + fireBoundary) / 2;
+        ctx.fillStyle = 'rgba(155, 120, 40, 0.85)';
+        ctx.fillText('攒钱期', stage1Mid, labelY);
+        const stage2Mid = (fireBoundary + right) / 2;
+        ctx.fillStyle = 'rgba(30, 110, 60, 0.95)';
+        ctx.fillText('自由期', stage2Mid, labelY);
+      }
+      
+      if(fireBoundary !== null){
+        ctx.strokeStyle = 'rgba(42, 143, 71, 0.4)';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([6, 6]);
+        ctx.beginPath();
+        ctx.moveTo(fireBoundary, top);
+        ctx.lineTo(fireBoundary, bottom);
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+      ctx.restore();
+    },
+    afterDatasetsDraw(chart) {
+      const {ctx, scales} = chart;
+      
+      const drawNode = (idx, label, sublabel, position) => {
+        if(idx < 0 || idx >= data.length) return;
+        const x = scales.x.getPixelForValue(idx);
+        const y = scales.y.getPixelForValue(data[idx].compound);
+        
+        // 圆点
+        ctx.beginPath();
+        ctx.arc(x, y, 14, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(42,143,71,0.18)';
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(x, y, 8, 0, Math.PI * 2);
+        ctx.fillStyle = '#2A8F47';
+        ctx.fill();
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+        
+        // 气泡
+        ctx.font = '700 22px Manrope, sans-serif';
+        const textWidth = ctx.measureText(label).width;
+        ctx.font = '500 16px Plus Jakarta Sans, sans-serif';
+        const subWidth = ctx.measureText(sublabel).width;
+        const boxWidth = Math.max(textWidth, subWidth) + 32;
+        const boxHeight = 76;
+        const isAbove = position !== 'below';
+        const verticalOffset = 24;
+        const arrowSize = 10;
+        
+        let boxX = x - boxWidth / 2;
+        let arrowX = x;
+        const padding = 8;
+        if(boxX < scales.x.left + padding){
+          boxX = scales.x.left + padding;
+          arrowX = Math.min(x, boxX + boxWidth - 24);
+        } else if(boxX + boxWidth > scales.x.right - padding){
+          boxX = scales.x.right - padding - boxWidth;
+          arrowX = Math.max(x, boxX + 24);
+        }
+        const boxY = isAbove ? y - boxHeight - verticalOffset : y + verticalOffset;
+        
+        // 实心绿色气泡
+        ctx.fillStyle = '#2A8F47';
+        ctx.strokeStyle = 'rgba(0,0,0,0.05)';
+        ctx.lineWidth = 1;
+        const r = 12;
+        ctx.beginPath();
+        if(isAbove){
+          ctx.moveTo(boxX + r, boxY);
+          ctx.lineTo(boxX + boxWidth - r, boxY);
+          ctx.quadraticCurveTo(boxX + boxWidth, boxY, boxX + boxWidth, boxY + r);
+          ctx.lineTo(boxX + boxWidth, boxY + boxHeight - r);
+          ctx.quadraticCurveTo(boxX + boxWidth, boxY + boxHeight, boxX + boxWidth - r, boxY + boxHeight);
+          ctx.lineTo(arrowX + 8, boxY + boxHeight);
+          ctx.lineTo(arrowX, boxY + boxHeight + arrowSize);
+          ctx.lineTo(arrowX - 8, boxY + boxHeight);
+          ctx.lineTo(boxX + r, boxY + boxHeight);
+          ctx.quadraticCurveTo(boxX, boxY + boxHeight, boxX, boxY + boxHeight - r);
+          ctx.lineTo(boxX, boxY + r);
+          ctx.quadraticCurveTo(boxX, boxY, boxX + r, boxY);
+        } else {
+          ctx.moveTo(boxX + r, boxY);
+          ctx.lineTo(arrowX - 8, boxY);
+          ctx.lineTo(arrowX, boxY - arrowSize);
+          ctx.lineTo(arrowX + 8, boxY);
+          ctx.lineTo(boxX + boxWidth - r, boxY);
+          ctx.quadraticCurveTo(boxX + boxWidth, boxY, boxX + boxWidth, boxY + r);
+          ctx.lineTo(boxX + boxWidth, boxY + boxHeight - r);
+          ctx.quadraticCurveTo(boxX + boxWidth, boxY + boxHeight, boxX + boxWidth - r, boxY + boxHeight);
+          ctx.lineTo(boxX + r, boxY + boxHeight);
+          ctx.quadraticCurveTo(boxX, boxY + boxHeight, boxX, boxY + boxHeight - r);
+          ctx.lineTo(boxX, boxY + r);
+          ctx.quadraticCurveTo(boxX, boxY, boxX + r, boxY);
+        }
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+        
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        ctx.fillStyle = '#FFFFFF';
+        ctx.font = '700 22px Manrope, sans-serif';
+        ctx.fillText(label, boxX + boxWidth/2, boxY + 12);
+        ctx.fillStyle = 'rgba(255,255,255,0.85)';
+        ctx.font = '500 15px Plus Jakarta Sans, sans-serif';
+        ctx.fillText(sublabel, boxX + boxWidth/2, boxY + 42);
+      };
+      
+      ctx.save();
+      const showOvertake = overtakeIdx > 0 && fireIdx > 0 && Math.abs(overtakeIdx - fireIdx) >= 3;
+      const showOvertakeAlone = overtakeIdx > 0 && fireIdx < 0;
+      
+      let firePosition = 'above';
+      let overtakePosition = 'above';
+      if(showOvertake && fireIdx > 0){
+        const x1 = scales.x.getPixelForValue(overtakeIdx);
+        const x2 = scales.x.getPixelForValue(fireIdx);
+        const chartWidth = scales.x.right - scales.x.left;
+        if(Math.abs(x2 - x1) < chartWidth * 0.3){
+          firePosition = 'below';
+        }
+      }
+      
+      if(showOvertake || showOvertakeAlone){
+        drawNode(overtakeIdx, data[overtakeIdx].age + ' 岁', '钱替你打工', overtakePosition);
+      }
+      if(fireIdx > 0){
+        drawNode(fireIdx, data[fireIdx].age + ' 岁', '财富自由', firePosition);
+      }
+      ctx.restore();
+    }
+  };
+  
+  shareChartInstance = new Chart(ctx, {
+    type:'line',
+    data:{
+      labels,
+      datasets:[
+        {
+          label:'不投资的我',
+          data: data.map(d => d.simple),
+          borderColor:'rgba(80,80,80,0.7)',
+          borderWidth:4,
+          borderDash:[10,7],
+          pointRadius:0,
+          tension:0.3,
+          fill:false
+        },
+        {
+          label:'复利的我',
+          data: data.map(d => d.compound),
+          borderColor:'#2A8F47',
+          borderWidth:6,
+          pointRadius:0,
+          tension:0.3,
+          fill:true,
+          backgroundColor:gradient
+        }
+      ]
+    },
+    options:{
+      responsive:false,
+      animation:false,
+      maintainAspectRatio:false,
+      layout:{padding:{top:50, bottom:8, left:8, right:24}},
+      plugins:{legend:{display:false}, tooltip:{enabled:false}},
+      scales:{
+        x:{
+          grid:{display:false},
+          ticks:{
+            color:'rgba(0,0,0,0.55)',
+            font:{family:'Manrope',size:16,weight:'500'},
+            maxRotation:0,autoSkipPadding:80
+          },
+          border:{color:'rgba(0,0,0,0.18)'}
+        },
+        y:{
+          grid:{color:'rgba(0,0,0,0.06)'},
+          ticks:{
+            color:'rgba(0,0,0,0.55)',
+            font:{family:'Manrope',size:16,weight:'500'},
+            callback: v => v >= 10000 ? (v/10000).toFixed(1) + 'k 万' : v + ' 万'
+          },
+          border:{display:false}
+        }
+      }
+    },
+    plugins:[stagesPlugin]
+  });
+}
+
+// 渲染表格版的主内容
+function renderShareCardTable(){
+  const data = renderShareCardCommon();
+  const fireYear = findFireYear(data);
+  const r = state.useCustom ? state.customReturn : state.returnRate;
+  
+  const main = document.getElementById('scMain');
+  main.className = 'sc-main';
+  
+  // 表格内容: 根据年龄跨度自适应密度
+  const span = state.endAge - state.age;
+  let step;
+  if(span <= 32) step = 1;
+  else if(span <= 40) step = 2;
+  else step = 3;
+  
+  const ages = new Set();
+  ages.add(state.age);
+  for(let a = state.age + step; a <= state.endAge; a += step){
+    ages.add(a);
+  }
+  if(fireYear) ages.add(fireYear.age);
+  if(state.cliffAge >= state.age && state.cliffAge <= state.endAge){
+    ages.add(state.cliffAge);
+    if(state.cliffAge - 1 >= state.age) ages.add(state.cliffAge - 1);
+    if(state.cliffAge + 1 <= state.endAge) ages.add(state.cliffAge + 1);
+  }
+  ages.add(state.endAge);
+  
+  const sortedAges = [...ages].sort((a,b) => a - b);
+  
+  const rows = sortedAges.map(age => {
+    const d = data.find(x => x.age === age);
+    if(!d) return '';
+    let cls = '';
+    if(fireYear && d.age === fireYear.age) cls = 'fire-row';
+    else if(d.isCliff) cls = 'cliff-row';
+    return `<tr class="${cls}">
+      <td>${d.age} 岁</td>
+      <td>${d.salary.toFixed(0)}</td>
+      <td>${d.spending.toFixed(0)}</td>
+      <td class="col-compound">${fmtNum(d.compound)}</td>
+      <td class="col-passive">${fmtNum(d.passive)}</td>
+    </tr>`;
+  }).join('');
+  
+  main.innerHTML = `
+    <table class="sc-table">
+      <thead>
+        <tr>
+          <th>年龄</th>
+          <th class="num">年薪</th>
+          <th class="num">消费</th>
+          <th class="num">复利财富</th>
+          <th class="num">被动收入</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+  `;
+  
+  document.getElementById('scFooterQuote').textContent = `单位:万元 · 在 ${r}% 年化收益下的逐年财富`;
+}
+
+// 当前选中的分享类型 (默认表格,因为更清晰更受欢迎)
+let currentShareType = 'table';
+
+async function generateShareImage(){
+  const modal = document.getElementById('shareModal');
+  const preview = document.getElementById('sharePreview');
+  const loading = document.getElementById('shareLoading');
+  
+  modal.classList.add('show');
+  preview.style.display = 'none';
+  loading.style.display = 'flex';
+  loading.innerHTML = '<div class="share-loading-spinner"></div><div>正在生成...</div>';
+  
+  await new Promise(r => requestAnimationFrame(r));
+  
+  // 根据类型渲染主内容
+  if(currentShareType === 'chart'){
+    renderShareCardChart();
+    await new Promise(r => setTimeout(r, 250));
+  } else {
+    renderShareCardTable();
+    await new Promise(r => setTimeout(r, 100));
+  }
+  
+  const cardEl = document.getElementById('shareCard');
+  
+  try {
+    const canvas = await html2canvas(cardEl, {
+      scale: 1,
+      useCORS: true,
+      backgroundColor: '#FFFFFF',
+      width: 1080,
+      height: 1920,
+      windowWidth: 1080,
+      windowHeight: 1920
+    });
+    const dataUrl = canvas.toDataURL('image/png', 0.95);
+    preview.src = dataUrl;
+    preview.style.display = 'block';
+    loading.style.display = 'none';
+    preview.dataset.url = dataUrl;
+    preview.dataset.type = currentShareType;
+  } catch(err){
+    console.error('生成分享图失败:', err);
+    loading.innerHTML = '<div style="color:var(--warn)">生成失败, 请重试</div>';
+  }
+}
+
+document.getElementById('generateShare').addEventListener('click', generateShareImage);
+document.getElementById('shareRegen').addEventListener('click', generateShareImage);
+document.getElementById('shareClose').addEventListener('click', () => {
+  document.getElementById('shareModal').classList.remove('show');
+});
+document.querySelector('.share-modal-bg').addEventListener('click', () => {
+  document.getElementById('shareModal').classList.remove('show');
+});
+document.getElementById('shareDownload').addEventListener('click', () => {
+  const preview = document.getElementById('sharePreview');
+  const url = preview.dataset.url;
+  if(!url) return;
+  const type = preview.dataset.type || 'chart';
+  const filename = type === 'table' ? '复利人生-账本.png' : '复利人生-曲线.png';
+  const link = document.createElement('a');
+  link.download = filename;
+  link.href = url;
+  link.click();
+});
+
+// 切换分享类型 (曲线 / 表格)
+document.querySelectorAll('.share-modal-toggle-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.share-modal-toggle-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentShareType = btn.dataset.shareType;
+    generateShareImage();
+  });
+});
+
+update();
+</script>
+
+</body>
+</html>
